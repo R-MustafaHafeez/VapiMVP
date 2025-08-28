@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Call Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <header class="p-6 flex justify-between items-center text-white">
+    <h1 class="text-2xl font-bold">AI Call Assistant</h1>
+    <nav class="space-x-6">
+      <a href="#" class="hover:underline">Home</a>
+      <a href="#" class="hover:underline">Features</a>
+      <a href="#" class="hover:underline">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="flex-1 flex flex-col items-center justify-center text-center px-4">
+    <h2 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">
+      Connect with Your Customers Instantly
+    </h2>
+    <p class="text-lg text-gray-200 mt-4 max-w-2xl">
+      Start AI-powered voice calls directly from your browser. Enter a number, hit call, and let our assistant do the rest.
+    </p>
+
+    <!-- Call Card -->
+    <div class="bg-white shadow-2xl rounded-2xl p-8 mt-10 w-full max-w-lg">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">📞 Start a Call</h3>
+      <form id="callForm" class="space-y-4">
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="+1234567890"
+          required
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        />
+        <button
+          type="submit"
+          class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all shadow-md"
+        >
+          Start Call
+        </button>
+      </form>
+      <div id="status" class="text-center text-sm mt-4 text-gray-600"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="p-6 text-center text-gray-200 text-sm">
+    © 2025 AI Call Assistant. All rights reserved.
+  </footer>
+
+  <script>
+    const form = document.getElementById("callForm");
+    const statusEl = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById("phone").value;
+      statusEl.textContent = "📡 Initiating call...";
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/start-call", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone }),
+        });
+        const data = await res.json();
+
+        if (data.status === "success") {
+          statusEl.textContent = "✅ Call started! Call ID: " + data.call_id;
+        } else {
+          statusEl.textContent = "❌ Error: " + data.message;
+        }
+      } catch (err) {
+        statusEl.textContent = "⚠️ Request failed: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>

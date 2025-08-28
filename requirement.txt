@@ -1,0 +1,4 @@
+fastapi
+uvicorn 
+vapi_server_sdk
+python-dotenv
